@@ -1,6 +1,6 @@
 # MatchZy Demo Upload Service
 
-This service is designed to handle automated uploads of demo files from the MatchZy plugin for Counter-Strike: Global Offensive servers.
+This service is designed to handle automated uploads of demo files from the MatchZy plugin for Counter-Strike 2 (CS2) servers.
 
 ## Setting Up Your Environment
 
@@ -13,9 +13,29 @@ To get started with the MatchZy Demo Upload Service:
    ```
 
 2. **Configure Your Environment Variables:**
-   Open the `.env` file in a text editor and replace the placeholder values with your actual configurations.
+   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION` key, which is used to authenticate requests to the service. Replace the placeholder values with your actual configurations.
 
 ## MatchZy Plugin
 
-This service works in conjunction with the [MatchZy Plugin](https://github.com/shobhit-pathak/MatchZy), which is responsible for sending demos to this webserver. A big thank you to [Shobhit Pathak](https://github.com/shobhit-pathak) for creating the MatchZy plugin.
+The MatchZy Demo Upload Service works in conjunction with the [MatchZy Plugin](https://github.com/shobhit-pathak/MatchZy) for CS2 servers. This plugin is responsible for sending demo recordings of matches to this web service. A comprehensive documentation of the MatchZy plugin can be found [here](https://shobhit-pathak.github.io/MatchZy/). For more details on demo recording and automated uploading, refer to the [GOTV section](https://shobhit-pathak.github.io/MatchZy/gotv/).
 
+### Plugin Configuration
+
+To integrate the CS2 server with this service, you need to configure the following parameters in the `cs2/cfg/MatchZy/config.cfg` file on your CS2 server:
+
+- `matchzy_demo_upload_url`: Define the URL where recorded demos will be uploaded after each match. For example:
+  ```cfg
+  matchzy_demo_upload_url "http://demos.mydomain.com:3000/upload"
+  ```
+- `matchzy_demo_upload_header_key`: This key should be `MatchZy-Authorization`. It's a custom HTTP header key for the demo upload requests.
+  ```cfg
+  matchzy_demo_upload_header_key MatchZy-Authorization
+  ```
+- `matchzy_demo_upload_header_value`: Set the value for the custom header. This should match the `MATCHZY_AUTHORIZATION` key defined in your service's `.env` file. For example:
+  ```cfg
+  matchzy_demo_upload_header_value [Your_Authorization_Code]
+  ```
+
+## Acknowledgements
+
+A big thank you to [Shobhit Pathak](https://github.com/shobhit-pathak) for creating the MatchZy plugin, facilitating seamless integration of match recordings and uploads for CS2 servers.

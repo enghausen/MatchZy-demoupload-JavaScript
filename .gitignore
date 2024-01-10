@@ -4,6 +4,9 @@
 # Node modules
 node_modules/
 
+# Log files
+logs/
+
 # Other unnecessary files
 *.log
 *.temp
