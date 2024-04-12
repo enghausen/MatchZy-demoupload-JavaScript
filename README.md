@@ -36,7 +36,7 @@ To manage the application with PM2:
 
 1. **Start the application with PM2:**
    ```bash
-   pm2 start app.js --name " MatchZy-demoupload"
+   pm2 start app.js --name "MatchZy-demoupload"
    ```
 
 2. **Ensure automatic restart with PM2:**
@@ -49,7 +49,7 @@ To manage the application with PM2:
 3. **Monitoring logs with PM2:**
    To check the application logs:
    ```bash
-   pm2 logs  MatchZy-demoupload
+   pm2 logs MatchZy-demoupload
    ```
 
 ## MatchZy Plugin
@@ -58,7 +58,7 @@ The MatchZy Demo Upload Service works in conjunction with the [MatchZy Plugin](h
 
 ### Plugin Configuration
 
-To integrate the CS2 server with this service, you need to configure the following parameters in the `cs2/cfg/MatchZy/config.cfg` file on your CS2 server:
+To integrate the CS2 server with this service, you need to configure the following parameters in the `csgo/cfg/MatchZy/config.cfg` file on your CS2 server:
 
 - `matchzy_demo_upload_url`: Define the URL where recorded demos will be uploaded after each match. For example:
   ```cfg
