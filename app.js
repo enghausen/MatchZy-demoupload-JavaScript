@@ -1,22 +1,30 @@
+// Load environment variables from .env file
 require('dotenv').config();
+
+// Required modules
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
+// Initialize express application
 const app = express();
-const port = 3000;
+
+// Port configuration: Use environment variable or default to 3000
+const port = process.env.PORT || 3000;
 
 // Logger setup
-// Set the directory for log files
-const logDirectory = path.join(__dirname, 'logs');
-// Create the directory if it doesn't exist
+// Define the log directory using an environment variable or default to 'logs'
+const logDirectory = path.join(__dirname, process.env.LOG_DIRECTORY_PATH || 'logs');
+
+// Ensure the log directory exists
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory, { recursive: true });
 }
-// Create a write stream for logging
+
+// Create a writable stream for logging
 const logStream = fs.createWriteStream(path.join(logDirectory, 'app.log'), { flags: 'a' });
 
-// Function to log messages
+// Function to append log messages to the log file and console
 function log(message) {
     const timestamp = new Date().toISOString();
     const logMessage = `${timestamp} - ${message}\n`;
@@ -24,7 +32,7 @@ function log(message) {
     console.log(logMessage);
 }
 
-// Middleware to log each request
+// Middleware to log each HTTP request
 app.use((req, res, next) => {
     const start = new Date();
     res.on('finish', () => {
@@ -34,7 +42,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Endpoint for file upload
+// Endpoint to handle file uploads
 app.post('/upload', function (req, res) {
     // Check for custom authorization header
     const customAuth = req.header('MatchZy-Authorization');
@@ -43,28 +51,32 @@ app.post('/upload', function (req, res) {
         return res.status(401).end('Unauthorized');
     }
 
-    // Extracting information from headers
+    // Extract the filename and determine the team name from it
     const filename = req.header('MatchZy-FileName');
-    const teamName = filename.split('_').slice(-1)[0].split('.')[0];
-    const folder = path.join('/mnt/demos/shared', teamName);
+    const teamName = filename.split('_').slice(-1)[0].split('.')[0];  // Team name is extracted from the last part of the filename before the extension
 
-    // Create directory if it doesn't exist
+    // Define the upload directory using an environment variable or default path
+    const folder = path.join(process.env.UPLOAD_DIRECTORY_PATH || '/mnt/demos/shared', teamName);
+
+    // Ensure the upload directory exists
     if (!fs.existsSync(folder)) {
         fs.mkdirSync(folder, { recursive: true });
     }
 
+    // Create a writable stream for the uploaded file
     let writeStream = fs.createWriteStream(path.join(folder, filename));
 
-    // Handling file upload stream
+    // Pipe the incoming file stream to the writable stream
     req.pipe(writeStream);
     req.on('end', () => {
+        // Once upload is complete, log the file details
         const fileSize = fs.statSync(path.join(folder, filename)).size;
         writeStream.end();
         log(`File uploaded: ${filename}, Size: ${fileSize} bytes, Team: ${teamName}, IP: ${req.ip}`);
         res.status(200).end('Success');
     });
 
-    // Handle file stream errors
+    // Handle errors during the file writing process
     writeStream.on('error', function (err) {
         log(`Error writing file: ${filename}, Error: ${err.message}, IP: ${req.ip}`);
         res.status(500).end('Error writing demo file: ' + err.message);
@@ -73,4 +85,3 @@ app.post('/upload', function (req, res) {
 
 // Start the server
 app.listen(port, () => log(`Server running on port ${port}`));
-

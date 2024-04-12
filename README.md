@@ -13,7 +13,44 @@ To get started with the MatchZy Demo Upload Service:
    ```
 
 2. **Configure Your Environment Variables:**
-   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION` key, which is used to authenticate requests to the service. Replace the placeholder values with your actual configurations.
+   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION`, `LOG_DIRECTORY_PATH`, `UPLOAD_DIRECTORY_PATH`, and `PORT` keys. Replace the placeholder values with your actual configurations. Example entries:
+   ```plaintext
+   MATCHZY_AUTHORIZATION=your_secret_key
+   LOG_DIRECTORY_PATH=./logs
+   UPLOAD_DIRECTORY_PATH=/your/demos/path
+   PORT=3000
+   ```
+
+## Installation
+
+Ensure Node.js and npm are installed on your system. Install the application dependencies from your project directory:
+```bash
+npm install
+```
+
+## Running the Service
+
+### Using PM2
+
+To manage the application with PM2:
+
+1. **Start the application with PM2:**
+   ```bash
+   pm2 start app.js --name " MatchZy-demoupload"
+   ```
+
+2. **Ensure automatic restart with PM2:**
+   Generate and configure PM2 to automatically start your application at system reboot:
+   ```bash
+   pm2 startup
+   pm2 save
+   ```
+
+3. **Monitoring logs with PM2:**
+   To check the application logs:
+   ```bash
+   pm2 logs  MatchZy-demoupload
+   ```
 
 ## MatchZy Plugin
 
