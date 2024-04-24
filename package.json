@@ -23,6 +23,7 @@
   "homepage": "https://github.com/enghausen/MatchZy-demoupload#readme",
   "dependencies": {
     "dotenv": "latest",
-    "express": "latest"
+    "express": "latest",
+    "node-fetch": "latest"
   }
 }

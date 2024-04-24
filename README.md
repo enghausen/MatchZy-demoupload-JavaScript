@@ -13,13 +13,16 @@ To get started with the MatchZy Demo Upload Service:
    ```
 
 2. **Configure Your Environment Variables:**
-   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION`, `LOG_DIRECTORY_PATH`, `UPLOAD_DIRECTORY_PATH`, `ADD_RANDOM_STRING_TO_FILENAME`, and `PORT` keys. Replace the placeholder values with your actual configurations. Example entries:
+   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION`, `LOG_DIRECTORY_PATH`, `UPLOAD_DIRECTORY_PATH`, `ADD_RANDOM_STRING_TO_FILENAME`, `ENABLE_DISCORD_NOTIFICATIONS`, `PORT`, `DISCORD_WEBHOOK_URL_TEAM1`, and `DISCORD_BASE_URL` keys. Replace the placeholder values with your actual configurations. Example entries:
    ```plaintext
    MATCHZY_AUTHORIZATION=your_secret_key
    LOG_DIRECTORY_PATH=./logs
    UPLOAD_DIRECTORY_PATH=/your/demos/path
    ADD_RANDOM_STRING_TO_FILENAME=true
+   ENABLE_DISCORD_NOTIFICATIONS=true
    PORT=3000
+   DISCORD_WEBHOOK_URL_TEAM1=https://discord.com/api/webhooks/xxxx
+   DISCORD_BASE_URL=http://demos.mydomain.com
    ```
 
    `ADD_RANDOM_STRING_TO_FILENAME` can be set to `true` or `false` depending on whether you want to append a random string to filenames to enhance security.
@@ -77,7 +80,7 @@ To integrate the CS2 server with this service, you need to configure the followi
   ```
 - `matchzy_demo_name_format`: Define the demo name format to include the timestamp, map name, and team name at the end of the demo name. For example:
   ```cfg
-  matchzy_demo_name_format "{TIME}_{MAP}_Adustio"
+  matchzy_demo_name_format "{TIME}_{MAP}_Team1"
   ```
 
 ## Acknowledgements
