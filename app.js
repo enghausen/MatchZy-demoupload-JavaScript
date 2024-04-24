@@ -5,6 +5,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const crypto = require('crypto'); // Added crypto module for generating random strings
 
 // Initialize express application
 const app = express();
@@ -53,8 +54,14 @@ app.post('/upload', function (req, res) {
     }
 
     // Extract the filename and determine the team name from it
-    const filename = req.header('MatchZy-FileName');
+    let filename = req.header('MatchZy-FileName');
     const teamName = filename.split('_').slice(-1)[0].split('.')[0];  // Team name is extracted from the last part of the filename before the extension
+
+    // Add a random string to the filename if enabled in the .env
+    if (process.env.ADD_RANDOM_STRING_TO_FILENAME === 'true') {
+        const randomString = crypto.randomBytes(8).toString('hex');  // Generates a random string
+        filename = `${filename.split('.').slice(0, -1).join('.')}_${randomString}.${filename.split('.').pop()}`;
+    }
 
     // Define the upload directory using an environment variable or default path
     const folder = path.join(process.env.UPLOAD_DIRECTORY_PATH || '/mnt/demos/shared', teamName);

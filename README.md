@@ -13,13 +13,16 @@ To get started with the MatchZy Demo Upload Service:
    ```
 
 2. **Configure Your Environment Variables:**
-   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION`, `LOG_DIRECTORY_PATH`, `UPLOAD_DIRECTORY_PATH`, and `PORT` keys. Replace the placeholder values with your actual configurations. Example entries:
+   Open the `.env` file in a text editor. Here, you need to specify the `MATCHZY_AUTHORIZATION`, `LOG_DIRECTORY_PATH`, `UPLOAD_DIRECTORY_PATH`, `ADD_RANDOM_STRING_TO_FILENAME`, and `PORT` keys. Replace the placeholder values with your actual configurations. Example entries:
    ```plaintext
    MATCHZY_AUTHORIZATION=your_secret_key
    LOG_DIRECTORY_PATH=./logs
    UPLOAD_DIRECTORY_PATH=/your/demos/path
+   ADD_RANDOM_STRING_TO_FILENAME=true
    PORT=3000
    ```
+
+   `ADD_RANDOM_STRING_TO_FILENAME` can be set to `true` or `false` depending on whether you want to append a random string to filenames to enhance security.
 
 ## Installation
 
@@ -71,6 +74,10 @@ To integrate the CS2 server with this service, you need to configure the followi
 - `matchzy_demo_upload_header_value`: Set the value for the custom header. This should match the `MATCHZY_AUTHORIZATION` key defined in your service's `.env` file. For example:
   ```cfg
   matchzy_demo_upload_header_value [Your_Authorization_Code]
+  ```
+- `matchzy_demo_name_format`: Define the demo name format to include the timestamp, map name, and team name at the end of the demo name. For example:
+  ```cfg
+  matchzy_demo_name_format "{TIME}_{MAP}_Adustio"
   ```
 
 ## Acknowledgements
