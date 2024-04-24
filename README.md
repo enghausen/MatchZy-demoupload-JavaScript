@@ -27,6 +27,52 @@ To get started with the MatchZy Demo Upload Service:
 
    `ADD_RANDOM_STRING_TO_FILENAME` can be set to `true` or `false` depending on whether you want to append a random string to filenames to enhance security.
 
+## Node.js and NVM Installation Guide
+
+This guide provides step-by-step instructions for installing Node Version Manager (NVM), Node.js, and npm, and setting a specific version of Node.js as the default.
+
+### Installing NVM (Node Version Manager)
+
+NVM allows you to manage multiple installations of Node.js and npm. To install NVM:
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+```
+
+This script clones the NVM repository to `~/.nvm` and adds the source line to your profile (`~/.bashrc`, `~/.zshrc`, `~/.profile`, or `~/.bash_profile`).
+
+**Reload your shell**
+```bash
+source ~/.bashrc
+```
+
+### Installing Node.js
+
+Use NVM to install Node.js. This example installs Node.js version 21, which includes npm:
+
+```bash
+nvm install 21
+```
+
+### Setting Default Node.js Version
+
+To avoid having to manually select the version each time you open a new shell, set the default Node.js version with NVM:
+
+```bash
+nvm alias default 21
+```
+
+### Verifying the Installation
+
+Ensure that Node.js and npm are correctly installed by checking their versions:
+
+```bash
+node -v # should print `v21.x.x`
+npm -v  # should print `10.x.x`
+```
+
+This verifies that the correct versions of Node.js and npm are being used in your environment.
+
 ## Installation
 
 Ensure Node.js and npm are installed on your system. Install the application dependencies from your project directory:
