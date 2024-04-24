@@ -193,7 +193,6 @@ This Nginx configuration is designed to be adaptable to different environments a
 
 ### Reverse Proxy Setup
 - The reverse proxy settings are configured to forward requests to a local Node.js application running on port 3000. If your application runs on a different port or host, update the `proxy_pass` directive accordingly.
-```
 
 ## Acknowledgements
 
