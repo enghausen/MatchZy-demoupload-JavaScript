@@ -35,9 +35,10 @@ function log(message) {
 // Middleware to log each HTTP request
 app.use((req, res, next) => {
     const start = new Date();
+    const clientIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     res.on('finish', () => {
         const duration = new Date() - start;
-        log(`Request from IP: ${req.ip}, Method: ${req.method}, URL: ${req.url}, Status: ${res.statusCode}, Duration: ${duration}ms`);
+        log(`Request from IP: ${clientIp}, Method: ${req.method}, URL: ${req.url}, Status: ${res.statusCode}, Duration: ${duration}ms`);
     });
     next();
 });
