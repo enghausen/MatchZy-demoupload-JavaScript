@@ -22,7 +22,7 @@ To get started with the MatchZy Demo Upload Service:
    ENABLE_DISCORD_NOTIFICATIONS=true
    PORT=3000
    DISCORD_WEBHOOK_URL_TEAM1=https://discord.com/api/webhooks/xxxx
-   DISCORD_BASE_URL=http://demos.mydomain.com
+   DISCORD_BASE_URL=https://demos.mydomain.com
    ```
 
    `ADD_RANDOM_STRING_TO_FILENAME` can be set to `true` or `false` depending on whether you want to append a random string to filenames to enhance security.
@@ -83,7 +83,7 @@ To integrate the CS2 server with this service, you need to configure the followi
   matchzy_demo_name_format "{TIME}_{MAP}_Team1"
   ```
 
-## Nginx Configuration
+## Nginx Configuration (optional)
 
 This service uses Nginx as both a web server and reverse proxy to manage traffic to the Node.js application and to handle authentication and direct file access.
 
@@ -107,7 +107,7 @@ server {
     }
 
     # Allow direct file access without authentication
-    location ~* ^/(Team1|Team2|Team3|Team4)/.*\.dem$ {
+    location ~* ^/(Team1|Team2|Team3|Team4)/.*\\.dem$ {
         auth_basic off;
         autoindex off;  # Disable directory listing here to prevent browsing without auth
     }
@@ -146,6 +146,29 @@ server {
 
 This configuration ensures that your demo files are served securely with optional directory listing and authentication per team, while also providing a seamless upload experience through a reverse proxy setup.
 
+## Setting Up SSL with Let's Encrypt
+
+Let's Encrypt provides a free, automated, and open certificate authority that can be utilized through tools like Certbot for effortless SSL/TLS certificate management. Here’s how you can set up SSL for your Nginx server using Let's Encrypt:
+
+1. **Install Certbot:**
+   ```bash
+   sudo apt update
+   sudo apt install certbot python3-certbot-nginx
+   ```
+
+2. **Obtain and Install Certificates:**
+   ```bash
+   sudo certbot --nginx -d demos.mydomain.com
+   ```
+
+   Follow the prompts to configure your certificates. Certbot will automatically modify your Nginx configuration to use these certificates and set up a renewal process.
+
+3. **Automatic Renewal:**
+   Certbot automatically sets up a cron job to renew your certificates before they expire. You can verify the cron job by checking Certbot's renewal configuration:
+   ```bash
+   sudo certbot renew --dry-run
+   ```
+
 ## Customizing Your Nginx Configuration
 
 This Nginx configuration is designed to be adaptable to different environments and needs. Follow these guidelines to customize it for your specific setup:
@@ -166,11 +189,11 @@ This Nginx configuration is designed to be adaptable to different environments a
 - This configuration disables directory listing and basic authentication for `.dem` files within each team's directory, allowing direct access via links. Make sure that the regex in the `location` directive correctly identifies the file types you want to serve without authentication.
 
 ### SSL Configuration
-- **SSL Certificates**: The SSL paths in the configuration (`/etc/letsencrypt/live/demos.mydomain.com/fullchain.pem` and `/etc/letsencrypt/live/demos.mydomain.com/privkey.pem`) are examples. You must replace these with the actual paths to your SSL certificate and key files.
-- If you are not using Let's Encrypt, adjust these paths and possibly the included SSL parameters (`ssl_dhparam`, etc.) according to your SSL setup.
+- **SSL Certificates**: Ensure that your SSL paths correctly point to your Let's Encrypt certificates. This setup enhances security by encrypting all data exchanged between your server and clients.
 
 ### Reverse Proxy Setup
 - The reverse proxy settings are configured to forward requests to a local Node.js application running on port 3000. If your application runs on a different port or host, update the `proxy_pass` directive accordingly.
+```
 
 ## Acknowledgements
 
