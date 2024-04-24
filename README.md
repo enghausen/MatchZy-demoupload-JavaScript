@@ -198,8 +198,8 @@ Let's Encrypt provides a free, automated, and open certificate authority that ca
 
 1. **Install Certbot:**
    ```bash
-   sudo apt update
-   sudo apt install certbot python3-certbot-nginx
+   sudo dnf update
+   sudo dnf install certbot python3-certbot-nginx
    ```
 
 2. **Obtain and Install Certificates:**
