@@ -83,6 +83,95 @@ To integrate the CS2 server with this service, you need to configure the followi
   matchzy_demo_name_format "{TIME}_{MAP}_Team1"
   ```
 
+## Nginx Configuration
+
+This service uses Nginx as both a web server and reverse proxy to manage traffic to the Node.js application and to handle authentication and direct file access.
+
+### Nginx as a Web Server
+
+The Nginx server is configured to serve files directly with optional authentication per team directory and to enable directory listing:
+
+```nginx
+server {
+    server_name demos.mydomain.com;
+
+    # Global settings
+    root /your/demos/path;
+    autoindex on;  # Enable directory listing globally
+
+    # Authentication for each team directory for browsing
+    location ~* ^/(Team1|Team2|Team3|Team4)/$ {
+        auth_basic "Restricted";
+        auth_basic_user_file /etc/nginx/.htpasswd_$1;  # Dynamically load password file based on directory
+        autoindex on;
+    }
+
+    # Allow direct file access without authentication
+    location ~* ^/(Team1|Team2|Team3|Team4)/.*\.dem$ {
+        auth_basic off;
+        autoindex off;  # Disable directory listing here to prevent browsing without auth
+    }
+
+    # Upload location
+    location /upload {
+        client_max_body_size 500m;
+        proxy_pass http://localhost:3000/upload;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    listen [::]:443 ssl ipv6only=on; # managed by Certbot
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/demos.mydomain.com/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/demos.mydomain.com/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+}
+
+# HTTP to HTTPS redirect
+server {
+    if ($host = demos.mydomain.com) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+    listen 80;
+    listen [::]:80;
+    server_name demos.mydomain.com;
+    return 404; # managed by Certbot
+}
+```
+
+This configuration ensures that your demo files are served securely with optional directory listing and authentication per team, while also providing a seamless upload experience through a reverse proxy setup.
+
+## Customizing Your Nginx Configuration
+
+This Nginx configuration is designed to be adaptable to different environments and needs. Follow these guidelines to customize it for your specific setup:
+
+### Update Domain and Paths
+- **Domain Name**: Replace `demos.mydomain.com` with your actual domain name to match your DNS settings.
+- **Root Directory**: Change `/your/demos/path` to the path where your demo files are stored on the server. This should be the directory where the uploaded demo files are saved.
+
+### Configuring Team Directories
+- **Team Directories**: The example configuration uses generic placeholders (`Team1`, `Team2`, `Team3`, `Team4`). You should replace these with the actual names of the teams or directories you are using.
+  - Modify the `location` block patterns to match the directory names you have set up.
+  - Adjust the `.htpasswd_$1` references to match the naming conventions of your password files for HTTP authentication.
+
+### Authentication Setup
+- **Authentication Files**: Ensure that you have corresponding `.htpasswd` files for each team or directory specified. These files should be properly configured with credentials to control access.
+
+### Direct File Access
+- This configuration disables directory listing and basic authentication for `.dem` files within each team's directory, allowing direct access via links. Make sure that the regex in the `location` directive correctly identifies the file types you want to serve without authentication.
+
+### SSL Configuration
+- **SSL Certificates**: The SSL paths in the configuration (`/etc/letsencrypt/live/demos.mydomain.com/fullchain.pem` and `/etc/letsencrypt/live/demos.mydomain.com/privkey.pem`) are examples. You must replace these with the actual paths to your SSL certificate and key files.
+- If you are not using Let's Encrypt, adjust these paths and possibly the included SSL parameters (`ssl_dhparam`, etc.) according to your SSL setup.
+
+### Reverse Proxy Setup
+- The reverse proxy settings are configured to forward requests to a local Node.js application running on port 3000. If your application runs on a different port or host, update the `proxy_pass` directive accordingly.
+
 ## Acknowledgements
 
 A big thank you to [Shobhit Pathak](https://github.com/shobhit-pathak) for creating the MatchZy plugin, facilitating seamless integration of match recordings and uploads for CS2 servers.
