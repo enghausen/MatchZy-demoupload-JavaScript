@@ -1,6 +1,10 @@
-# MatchZy Demo Upload Service
+# MatchZy Demo Upload Service (JavaScript)
 
 This service is designed to handle automated uploads of demo files from the MatchZy plugin for Counter-Strike 2 (CS2) servers.
+
+## Status
+
+**Note:** This project is no longer maintained or actively supported. It has been replaced by a PHP version available at [MatchZy Demo Upload PHP](https://github.com/enghausen/MatchZy-demoupload-PHP).
 
 ## Setting Up Your Environment
 
@@ -231,6 +235,19 @@ This Nginx configuration is designed to be adaptable to different environments a
 ### Authentication Setup
 - **Authentication Files**: Ensure that you have corresponding `.htpasswd` files for each team or directory specified. These files should be properly configured with credentials to control access.
 
+#### Customizing Team Authentication
+
+To create `.htpasswd` files for team authentication:
+```bash
+sudo htpasswd -c /etc/nginx/.htpasswd_Team1 team1
+```
+Replace `Team1` with the directory and `team1` as the username.
+
+Reload NGINX:
+```bash
+sudo nginx -s reload
+```
+
 ### Direct File Access
 - This configuration disables directory listing and basic authentication for `.dem` files within each team's directory, allowing direct access via links. Make sure that the regex in the `location` directive correctly identifies the file types you want to serve without authentication.
 
@@ -243,3 +260,7 @@ This Nginx configuration is designed to be adaptable to different environments a
 ## Acknowledgements
 
 A big thank you to [Shobhit Pathak](https://github.com/shobhit-pathak) for creating the MatchZy plugin, facilitating seamless integration of match recordings and uploads for CS2 servers.
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
